@@ -1,0 +1,7 @@
+log*
+*.pyc
+improved_wgan_training/*
+ckpt_cwgan/*
+log_cwgan/*
+logs/*
+data/*
