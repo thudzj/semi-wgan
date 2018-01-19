@@ -184,7 +184,7 @@ def main():
         F2 = np.zeros([mnist_trainY.shape[0], 8,8,64])
         Y2 = np.zeros(mnist_trainY.shape)
         print("Pretraining...")
-        for i in range(20000):
+        for i in range(10000):
             svhn_bx, svhn_by = svhn_trainset.next_batch(batch_size)
             mnist_bx, _ = mnist_trainset.next_batch(batch_size)
             [  _, loss1_] = sess.run([opt, loss1], feed_dict={x1:svhn_bx, y1:svhn_by, x2:mnist_bx})
