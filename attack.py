@@ -143,7 +143,7 @@ def build_graph():
     theta_critic = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, scope='critic')
 
     loss3 = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels=tf.nn.softmax(f1_logits_clf), logits=f1a_logits_clf)) \
-          + 1.0 * tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(labels=tf.zeros_like(f1a_logits_critic), logits=f1a_logits_critic))
+          + 1.0 * tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(labels=tf.zeros_like(f1a_logits_critic), logits=f1a_logits_critic)) \
           + tf.maximum(1 - tf.reduce_sum(epsilon)/batch_size, 0)
     loss1_sum = tf.summary.scalar("loss1", loss1)
     loss2_sum = tf.summary.scalar("loss2", loss2_clf+loss2_critic)
