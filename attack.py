@@ -179,46 +179,46 @@ def main():
         sess.run(tf.global_variables_initializer())
         summary_writer = tf.summary.FileWriter(log_dir, sess.graph)
 
-        # F1 = np.zeros([svhn_trainY.shape[0], 8,8,64])
-        # Y1 = np.zeros(svhn_trainY.shape)
-        # F2 = np.zeros([mnist_trainY.shape[0], 8,8,64])
-        # Y2 = np.zeros(mnist_trainY.shape)
-        # print("Pretraining...")
-        # for i in range(20000):
-        #     svhn_bx, svhn_by = svhn_trainset.next_batch(batch_size)
-        #     mnist_bx, _ = mnist_trainset.next_batch(batch_size)
-        #     [  _, loss1_] = sess.run([opt, loss1], feed_dict={x1:svhn_bx, y1:svhn_by, x2:mnist_bx})
-        #
-        #     if i % 100 == 99:
-        #         print("Pretraining ite %d, loss1: %f" % (i, loss1_))
-        #
-        #     if i % 1000 == 999:
-        #         acc1_ = []
-        #         for j in range(26):
-        #             y1_test_ = sess.run([y1_test], feed_dict={x1: svhn_testX[j*1000:(j+1)*1000]})
-        #             acc1_.append(np.mean(np.equal(svhn_testY[j*1000:(j+1)*1000], y1_test_).astype(np.float32)))
-        #         acc2_ = []
-        #         for j in range(10):
-        #             y2_test_ = sess.run([y2_test], feed_dict={x2: mnist_testX[j*1000:(j+1)*1000]})
-        #             acc2_.append(np.mean(np.equal(mnist_testY[j*1000:(j+1)*1000], y2_test_).astype(np.float32)))
-        #         print("--------->Pretraining ite %d, acc1: %f, acc2: %f" % (i, np.mean(acc1_),  np.mean(acc2_)))
-        # for i in range(int(math.ceil(svhn_trainset._num_examples/batch_size))):
-        #     start = i * batch_size
-        #     end = min((i+1)*batch_size, svhn_trainset._num_examples)
-        #     F1[start:end] = sess.run(f1, feed_dict={x1:svhn_trainset._images[start:end]})
-        #     Y1[start:end] = svhn_trainset._labels[start:end]
-        # for i in range(int(math.ceil(mnist_trainset._num_examples/batch_size))):
-        #     start = i * batch_size
-        #     end = min((i+1)*batch_size, mnist_trainset._num_examples)
-        #     F2[start:end] = sess.run(f2, feed_dict={x2:mnist_trainset._images[start:end]})
-        #     Y2[start:end] = mnist_trainset._labels[start:end]
-        # np.savez('features.npz', F1=F1, Y1=Y1, F2=F2, Y2=Y2)
+        F1 = np.zeros([svhn_trainY.shape[0], 8,8,64])
+        Y1 = np.zeros(svhn_trainY.shape)
+        F2 = np.zeros([mnist_trainY.shape[0], 8,8,64])
+        Y2 = np.zeros(mnist_trainY.shape)
+        print("Pretraining...")
+        for i in range(20000):
+            svhn_bx, svhn_by = svhn_trainset.next_batch(batch_size)
+            mnist_bx, _ = mnist_trainset.next_batch(batch_size)
+            [  _, loss1_] = sess.run([opt, loss1], feed_dict={x1:svhn_bx, y1:svhn_by, x2:mnist_bx})
+        
+            if i % 100 == 99:
+                print("Pretraining ite %d, loss1: %f" % (i, loss1_))
+        
+            if i % 1000 == 999:
+                acc1_ = []
+                for j in range(26):
+                    y1_test_ = sess.run([y1_test], feed_dict={x1: svhn_testX[j*1000:(j+1)*1000]})
+                    acc1_.append(np.mean(np.equal(svhn_testY[j*1000:(j+1)*1000], y1_test_).astype(np.float32)))
+                acc2_ = []
+                for j in range(10):
+                    y2_test_ = sess.run([y2_test], feed_dict={x2: mnist_testX[j*1000:(j+1)*1000]})
+                    acc2_.append(np.mean(np.equal(mnist_testY[j*1000:(j+1)*1000], y2_test_).astype(np.float32)))
+                print("--------->Pretraining ite %d, acc1: %f, acc2: %f" % (i, np.mean(acc1_),  np.mean(acc2_)))
+        for i in range(int(math.ceil(svhn_trainset._num_examples/batch_size))):
+            start = i * batch_size
+            end = min((i+1)*batch_size, svhn_trainset._num_examples)
+            F1[start:end] = sess.run(f1, feed_dict={x1:svhn_trainset._images[start:end]})
+            Y1[start:end] = svhn_trainset._labels[start:end]
+        for i in range(int(math.ceil(mnist_trainset._num_examples/batch_size))):
+            start = i * batch_size
+            end = min((i+1)*batch_size, mnist_trainset._num_examples)
+            F2[start:end] = sess.run(f2, feed_dict={x2:mnist_trainset._images[start:end]})
+            Y2[start:end] = mnist_trainset._labels[start:end]
+        np.savez('features.npz', F1=F1, Y1=Y1, F2=F2, Y2=Y2)
 
-        npz = np.load('features.npz')
-        F1 = npz['F1']
-        F2 = npz['F2']
-        Y1 = npz['Y1']
-        Y2 = npz['Y2']
+#         npz = np.load('features.npz')
+#         F1 = npz['F1']
+#         F2 = npz['F2']
+#         Y1 = npz['Y1']
+#         Y2 = npz['Y2']
         print("Trainging...")
         F1_set = make_dataset(F1, Y1)
         F2_set = make_dataset(F2, Y2)
